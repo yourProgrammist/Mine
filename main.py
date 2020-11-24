@@ -2,13 +2,15 @@ import sys
 from PyQt5.QtGui import QPainter, QColor
 from PyQt5 import uic  # Импортируем uic
 from PyQt5.QtWidgets import QApplication, QMainWindow
+from ui_file import Ui_MainWindow
 import random
+from ui_file import Ui_MainWindow
 
 
-class MyWidget(QMainWindow):
+class MyWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('UI.ui', self)  # Загружаем дизайн
+        self.setupUi(self)
         self.pushButton.clicked.connect(self.paint)
         self.do_paint = False
 
@@ -27,12 +29,17 @@ class MyWidget(QMainWindow):
         x = random.choice(range(50, 400))
         y = random.choice(range(50, 400))
         a = random.choice(range(10, 250))
-        qp.setBrush(QColor(255, 225, 0))
+        qp.setBrush(QColor(random.choice(range(0, 256)), random.choice(range(0, 256)), random.choice(range(0, 256))))
         qp.drawEllipse(x, y, a, a)
+
+
+def except_hook(cls, exception, traceback):
+    sys.__excepthook__(cls, exception, traceback)
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = MyWidget()
     ex.show()
+    sys.excepthook = except_hook
     sys.exit(app.exec_())
